@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.earthquakeapi.models.EarthQuakeAtt
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 
@@ -73,7 +75,7 @@ class EarrthQuakeFragment : Fragment() {
         @SuppressLint("SimpleDateFormat")
         var dateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
         @SuppressLint("SimpleDateFormat")
-        var timeFormat: SimpleDateFormat = SimpleDateFormat("hh:mm")
+        var timeFormat: SimpleDateFormat = SimpleDateFormat("HH:mm")
         var earthQuakeMag= itemView.findViewById(R.id.magnitude_tv) as TextView
         var earthQuakeReigon = itemView.findViewById(R.id.reigon_tv) as TextView
         var earthQuakeTime = itemView.findViewById(R.id.time_textView) as TextView
@@ -83,12 +85,14 @@ class EarrthQuakeFragment : Fragment() {
         fun bind(earthQuakeAtt: EarthQuakeAtt){
             location=earthQuakeAtt.geometric.geometrics
             var earthQuakeStrength: Double = earthQuakeAtt.properties.strength.toDouble()
+            val df = DecimalFormat("#.##")
+            df.roundingMode = RoundingMode.CEILING
             earthQuakeReigon.text = earthQuakeAtt.properties.place
             val time = earthQuakeAtt.properties.time
             earthQuakeTime.text = timeFormat.format(time)
             earthQuakeDate.text = dateFormat.format(time)
             earthQuakeMag.apply {
-                text = earthQuakeStrength.toString()
+                text = df.format(earthQuakeStrength).toString()
                  when{
                      earthQuakeStrength < 4.0 -> setBackgroundResource(R.drawable.green_circle)
                      earthQuakeStrength < 5.0 -> setBackgroundResource(R.drawable.yellow_circle)
